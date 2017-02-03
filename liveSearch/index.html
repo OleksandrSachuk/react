@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>React - live search</title>
+</head>
+
+<body>
+	<div id="root"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+	<script type="text/babel">
+		
+		//массив данных для поиска
+
+		var libraries = [
+		    { name: 'Backbone.js', url: 'http://documentcloud.github.io/backbone/'},
+		    { name: 'AngularJS', url: 'https://angularjs.org/'},
+		    { name: 'jQuery', url: 'http://jquery.com/'},
+		    { name: 'Prototype', url: 'http://www.prototypejs.org/'},
+		    { name: 'React', url: 'http://facebook.github.io/react/'},
+		    { name: 'Ember', url: 'http://emberjs.com/'},
+		    { name: 'Knockout.js', url: 'http://knockoutjs.com/'},
+		    { name: 'Dojo', url: 'http://dojotoolkit.org/'},
+		    { name: 'Mootools', url: 'http://mootools.net/'},
+		    { name: 'Underscore', url: 'http://documentcloud.github.io/underscore/'},
+		    { name: 'Lodash', url: 'http://lodash.com/'},
+		    { name: 'Moment', url: 'http://momentjs.com/'},
+		    { name: 'Express', url: 'http://expressjs.com/'},
+		    { name: 'Koa', url: 'http://koajs.com/'}
+		];
+
+		//создание класса поиска React
+		var Search = React.createClass({
+
+	    	//установка начального состояния строки поиска - пустая строка
+	    	getInitialState: function(){
+	        	return { searchString: '' };
+	    	},
+			
+			//создание функции присвоения введенных данных в строке поиска
+	    	handleChange: function(e){
+				
+				//установка состояния строки поиска и присвоение введенных данных
+	        	this.setState({searchString: e.target.value});
+	    	},
+
+			//рендер
+	    	render: function() {
+			
+				//создание переменной и присвоение ей свойств (массива с данными)
+	        	var libraries = this.props.items,
+	            
+	            //присвоение значения переменной - строка поиска (состояние строки поиска 
+	            //с удалением пробелов и приведение к нижнему регистру)
+	            searchString = this.state.searchString.trim().toLowerCase();
+
+				//если строка поиска содержит больше 0 символов
+	        	if(searchString.length > 0){
+
+	            	//создание нового массива с элементами, полученными в результате функции фильтрации
+	            	libraries = libraries.filter(function(l){
+						
+						//функция возвращает элементы, которые удовлетворяют запросу в строке поиска 
+	                	return l.name.toLowerCase().match(searchString);
+	            	});
+	        	}
+
+	        	return (
+	        		<div>
+	                    <input 
+	                    	type="text"
+
+	                    	//значение изначально пустая строка, потом введенные данные 
+	                    	value={this.state.searchString} 
+
+	                    	//при событии изменения работает функция {/*handleChange*/}
+	                    	onChange={this.handleChange} 
+	                    	placeholder="Type here" 
+	                    />
+
+	                    <ul> 
+	                        {libraries.map(function(l){
+	                            return <li>{l.name} <a href={l.url}>{l.url}</a></li>
+	                        	}) 
+	                        }
+	                    </ul>
+	                </div>
+	            )
+		    }
+		});
+
+
+		ReactDOM.render(
+			<Search items={libraries} />,
+			document.getElementById("root")
+		);
+	</script>
+</body>
+
+</html>

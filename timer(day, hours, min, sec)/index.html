@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>React - timer</title>
+</head>
+
+<body>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script type="text/babel">
+
+    //variable section declaration
+    var sec;
+    $.getJSON('*.json', function(data){
+        sec = data;
+    });
+
+    var sec = 70000;
+    //get days, hours, minutes, seconds
+    var days=Math.floor(sec/60/60/24);
+    sec-=days*24*60*60;
+    var hours=Math.floor(sec/60/60);
+    sec-=hours*60*60;
+    var min=Math.floor(sec/60);
+    sec-=min*60;
+
+    //react element timer
+    var Timer; Timer = React.createClass({
+
+        //initial state time
+        getInitialState: function () {
+            return {
+                days: this.props.days,
+                hours: this.props.hours,
+                minutes: this.props.minutes,
+                seconds: this.props.seconds
+            };
+        },
+
+        //action after mount component
+        componentDidMount: function () {
+            this.timer = setInterval(this.tick, 1000);
+        },
+
+        //function timer
+        tick: function() {
+            //days configuration
+            if (this.state.seconds == 0) {
+                if (this.state.minutes == 0) {
+                    if (this.state.hours == 0) {
+                        if (this.state.days == 0) {
+                            return;
+                        }
+                        this.setState({ days: this.state.days -1 });
+                        this.setState({ hours: this.state.hours = 24 });
+                    }
+                    this.setState({ hours: this.state.hours -1 });
+                    this.setState({ minutes: this.state.minutes = 60 });
+                }
+                this.setState({ minutes: this.state.minutes -1 });
+                this.setState({ seconds: this.state.seconds = 60 });
+            }
+            else this.setState({ seconds: this.state.seconds - 1 });
+        },
+
+        //clear function setInterval after unmount component
+        componentWillUnmount: function () {
+            clearInterval(this.timer);
+        },
+
+        //results
+        render: function () {
+            return (
+                    <h1>{this.state.days < 10 ? "00" + this.state.days : this.state.days} days
+                        <br/>
+                        {this.state.hours < 10 ? "0" + this.state.hours : this.state.hours} hours
+                        <br/>
+                        {this.state.minutes < 10 ? "0" + this.state.minutes : this.state.minutes} minutes
+                        <br/>
+                        {this.state.seconds < 10 ? "0" + this.state.seconds : this.state.seconds} seconds</h1>)}
+    });
+
+    ReactDOM.render(
+    <Timer days={days} hours={hours} minutes={min} seconds={sec}/>,
+    document.getElementById('root'));
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   	<meta charset="UTF-8">
+	<title>React - timer</title>
+</head>
+
+<body>
+	<div id="root"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+	<script type="text/babel">
+		
+		//создание класса
+		var Timer = React.createClass({
+			
+			//установка начального состояния
+			getInitialState: function() {
+                return {
+
+                	//счетчик 0 секунд
+                    seconds: 0
+                };
+            },
+			
+			//действия после монтирования компонента
+            componentDidMount: function() {
+
+            	//создание переменной с функцией setInterval
+                this.timer = setInterval(this.tick, 1000);
+            },
+			
+			//функция увеличния значения на единицу
+			tick: function() {
+                this.setState({ seconds: this.state.seconds + 1 });
+            },
+			
+			//очистка функции setInterval после удаления компонента
+			componentWillUnmount: function() {
+                clearInterval(this.timer);
+            },
+			
+			//вывод результатов работы
+			render: function() {
+                return (
+                    <h4> Уже прошло {this.state.seconds} секунд </h4>
+                );
+            }
+        });
+
+		 ReactDOM.render(
+            <Timer />,
+            document.getElementById('root')
+        );
+	</script>
+</body>
+
+</html>
